@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mausse.meu_primeiro_springboot.model.Produto;
 import com.mausse.meu_primeiro_springboot.repository.ProdutoRepository;
-
+import com.mausse.meu_primeiro_springboot.exceptions.RecursoNaoEncontradoException;
 @Service
 public class ProdutoService {
     
@@ -24,15 +24,21 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
 
-    public Optional<Produto> buscarPorId(Long id) {
-        return produtoRepository.findById(id);
+    public Produto buscarPorId(Long id) {
+        return produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado com o ID: " + id+ "."));
     }
 
     public Produto salvarProduto(Produto produto) {
         return produtoRepository.save(produto);
     }
 
-    public void deletar(Long id) {
+    public void deletarProduto(Long id) {
+
+        if (!produtoRepository.existsById(id)) {
+            throw new RecursoNaoEncontradoException("Produto não encontrado com o ID: " + id + ".");
+        }
+         
         produtoRepository.deleteById(id);
     }
 

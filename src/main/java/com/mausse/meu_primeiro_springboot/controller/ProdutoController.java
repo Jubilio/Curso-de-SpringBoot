@@ -3,6 +3,7 @@ package com.mausse.meu_primeiro_springboot.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.mausse.meu_primeiro_springboot.model.Produto;
 import com.mausse.meu_primeiro_springboot.service.ProdutoService;
 
@@ -27,20 +28,18 @@ public class ProdutoController {
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
-    // Aqui você pode adicionar os endpoints para manipular os produtos
-    // Exemplo de endpoint para listar todos os produtos
-    // @GetMapping
-
+   
     @GetMapping
     public List<Produto> listaProdutos() {
         return produtoService.listarTodos();
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarProduto(@PathVariable Long id) {
-        return produtoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> buscarProduto(@PathVariable Long id) {
+       
+        Produto produto = produtoService.buscarPorId(id);
+        return ResponseEntity.ok(produto);
+       
     }
 
     @PostMapping
@@ -51,7 +50,7 @@ public class ProdutoController {
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {
-        produtoService.deletar(id);
+        produtoService.deletarProduto(id);
         return ResponseEntity.noContent().build();
     }
 
